@@ -22,9 +22,15 @@ class MSAHandler {
 
   //// bottle ID for switching
   int botID = 0;
-  // positions
-  PVector prevPos = new PVector(0, 0);
-  PVector curPos = new PVector(0, 0);
+  // positions for all colors
+  PVector prevPosCy = new PVector(0, 0);
+  PVector curPosCy = new PVector(0, 0);
+  PVector prevPosMg = new PVector(0, 0);
+  PVector curPosMg = new PVector(0, 0);
+  PVector prevPosYl = new PVector(0, 0);
+  PVector curPosYl = new PVector(0, 0);
+  PVector prevPosBk = new PVector(0, 0);
+  PVector curPosBk = new PVector(0, 0);
   /// constructor
   MSAHandler() {    
     initMSA();
@@ -58,34 +64,75 @@ class MSAHandler {
   }
 
 
-  /////////  pass it the bottle id we're currently using ////
-  public void updatePositions(int bottleID) {
-
+  ///////// PASS THE POSITIONS OF ALL COLOR BOTTLES ////
+  
+      /*
+      PVector prevPosCy = new PVector(0, 0);
+  PVector curPosCy = new PVector(0, 0);
+  PVector prevPosMg = new PVector(0, 0);
+  PVector curPosMg = new PVector(0, 0);
+  PVector prevPosYl = new PVector(0, 0);
+  PVector curPosYl = new PVector(0, 0);
+  PVector prevPosBk = new PVector(0, 0);
+  PVector curPosBk = new PVector(0, 0);
+  */
+    public void updatePositionCy(PVector thePos) {
     ///////// change this to track the UI Sliders
-    curPos.x = mouseX;
-    curPos.y = mouseY;
-    /*
-    float mouseNormX = mouseX * invWidth;
-     float mouseNormY = mouseY * invHeight;
-     float mouseVelX = (mouseX - pmouseX) * invWidth;
-     float mouseVelY = (mouseY - pmouseY) * invHeight;
-     */
-    ///*
-    float mouseNormX = prevPos.x * invWidth;
-    float mouseNormY = curPos.y * invHeight;
-    float mouseVelX = (curPos.x - prevPos.x) * invWidth;
-    float mouseVelY = (curPos.y - prevPos.y) * invHeight;
-    //*/
-    prevPos.x = curPos.x;
-    prevPos.y = curPos.y;
-
-    botID = bottleID;
-
-    float tYPos = mouseY;
-
-
-    addForce(mouseNormX, mouseNormY, mouseVelX, mouseVelY, 15, 15); /// smaller is less force
+        int pID = 0;
+    curPosCy.x = thePos.x;
+    curPosCy.y = thePos.y;
+    float mouseNormX = prevPosCy.x * invWidth;
+    float mouseNormY = curPosCy.y * invHeight;
+    float mouseVelX = (curPosCy.x - prevPosCy.x) * invWidth;
+    float mouseVelY = (curPosCy.y - prevPosCy.y) * invHeight;
+    prevPosCy.x = curPosCy.x;
+    prevPosCy.y = curPosCy.y;
+    addForce(pID, mouseNormX, mouseNormY, mouseVelX, mouseVelY, 15, 15); /// smaller is less force
   }
+    public void updatePositionMg(PVector thePos) {
+    ///////// change this to track the UI Sliders
+    int pID = 1;
+    curPosMg.x = thePos.x;
+    curPosMg.y = thePos.y;
+    float mouseNormX = prevPosMg.x * invWidth;
+    float mouseNormY = curPosMg.y * invHeight;
+    float mouseVelX = (curPosMg.x - prevPosMg.x) * invWidth;
+    float mouseVelY = (curPosMg.y - prevPosMg.y) * invHeight;
+    prevPosMg.x = curPosMg.x;
+    prevPosMg.y = curPosMg.y;
+
+    addForce(pID, mouseNormX, mouseNormY, mouseVelX, mouseVelY, 15, 15); /// smaller is less force
+  }
+    public void updatePositionYl(PVector thePos) {
+    ///////// change this to track the UI Sliders
+    int pID = 2;
+    curPosYl.x = thePos.x;
+    curPosYl.y = thePos.y;
+    float mouseNormX = prevPosYl.x * invWidth;
+    float mouseNormY = curPosYl.y * invHeight;
+    float mouseVelX = (curPosYl.x - prevPosYl.x) * invWidth;
+    float mouseVelY = (curPosYl.y - prevPosYl.y) * invHeight;
+    prevPosYl.x = curPosYl.x;
+    prevPosYl.y = curPosYl.y;
+    addForce(pID, mouseNormX, mouseNormY, mouseVelX, mouseVelY, 15, 15); /// smaller is less force
+  }
+  ///*/
+
+  public void updatePositionBk(PVector thePos) {
+    ///////// change this to track the UI Sliders
+    int pID = 3;
+    curPosBk.x = thePos.x;
+    curPosBk.y = thePos.y;
+    float mouseNormX = prevPosBk.x * invWidth;
+    float mouseNormY = curPosBk.y * invHeight;
+    float mouseVelX = (curPosBk.x - prevPosBk.x) * invWidth;
+    float mouseVelY = (curPosBk.y - prevPosBk.y) * invHeight;
+    prevPosBk.x = curPosBk.x;
+    prevPosBk.y = curPosBk.y;
+
+    addForce(pID, mouseNormX, mouseNormY, mouseVelX, mouseVelY, 15, 15); /// smaller is less force
+  }
+
 
 
   public void update() {
@@ -143,6 +190,7 @@ class MSAHandler {
 
   // add force and dye to fluid, and create particles
   void emitter(float x, float y, float dx, float dy, int count, int emitterSize) {
+        int pID = 4;
     if (x>deathZone&& x<width-deathZone && y>deathZone&&y<height-deathZone) {
 
       if (Math.abs(dx) <tuioStationaryForce/10 && Math.abs(dx)<tuioStationaryForce/10) {
@@ -154,7 +202,7 @@ class MSAHandler {
       float mouseNormY = y * invHeight;
       float mouseVelX = dx * invWidth;
       float mouseVelY = dy * invHeight;
-      addForce(mouseNormX, mouseNormY, mouseVelX, mouseVelY, count, emitterSize);
+      addForce(pID, mouseNormX, mouseNormY, mouseVelX, mouseVelY, count, emitterSize);
     }
   }
 
@@ -163,8 +211,8 @@ class MSAHandler {
 
 
 
-  public void addForce(float x, float y, float dx, float dy, int count, int emitterSize) {
-
+  public void addForce(int pID, float x, float y, float dx, float dy, int count, int emitterSize) {
+    botID = pID;
     if (x<0) x = 0;
     else if (x>1) x = 1;
     if (y<0) y = 0;
@@ -202,6 +250,10 @@ class MSAHandler {
     case 3:
       particleSystemK.emitter(x * width, y * height, count, emitterSize);
       break;
+      
+     case 4:
+         
+         break;
     }
 
 
