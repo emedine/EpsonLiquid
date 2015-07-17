@@ -12,6 +12,7 @@ class Particle {
   final static float FLUID_FORCE = 0.35f;
 
   color sprayColor;
+  PImage img = loadImage("data/texture.png");
 
   void init(float x, float y, color theColor) { 
     // cmykConverter = new CMYK_Colour();
@@ -22,10 +23,24 @@ class Particle {
     float tY;
     float tK; 
     sprayColor = theColor; // cmykConverter.cmykConvert(theColor);
-    life = random(0.3f, 1); 
+    life = random(0.1f, 0.5f); 
     mass = random(0.1f, 1);  
     vx = random(-3, 3);/*-alpha*1-10;*/
     vy = random(-3, 3);
+    
+    /// create our blurry graphic
+    /*
+    PGraphics pg = createGraphics(200,200,OPENGL);
+    pg.beginDraw();
+    pg.background(0,0,0,0);
+    pg.fill(255);
+    pg.noStroke();
+    pg.ellipse(100,100,10,10);
+    pg.filter(BLUR,2);
+    pg.endDraw();
+    cir = pg.get();
+    imageMode(CENTER);
+    */
   }
   void update() { 
     if (life == 0) return; // only update if particle is visible
@@ -47,16 +62,30 @@ class Particle {
     if (life < 0.01) life = 0;
   } // fade out a bit (and kill if alpha == 0);
   void  display() {  
-    strokeWeight( life*particlesRenderSize);  
+    // strokeWeight( life*particlesRenderSize);  
+    noStroke();
     // stroke(life*(255),life*(255),255-life*100, life*200+55);
-    fill(sprayColor, 125);
+        
+        tint(sprayColor, 126); 
+    image(img, x, y);
+    fill(sprayColor, 35);
     ellipse(x,y,2, 2);
-    fill(sprayColor, 65);
+    
+    fill(sprayColor, 35);
+    ellipse(x,y,5, 5);
+    
+    fill(sprayColor, 35);
     ellipse(x,y,7, 7);
+    
+    fill(sprayColor, 35);
+    ellipse(x,y,9, 9);
+
+    
+    // image( cir, x, y);
     /// filter(BLUR,1);
-    stroke(sprayColor, life*200+55);
+    // stroke(sprayColor, life*200+55);
     //point(x, y);  
-    line(x-vx, y-vy, x, y);
+    // line(x-vx, y-vy, x, y);
 
   }
 }

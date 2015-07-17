@@ -13,11 +13,10 @@ class ParticleSystem {
     pNum = 0;
   }
 
-  void updateAndDraw(PVector thePos) {
+  void updateAndDraw() {
     //  if(mMousePressed){ emitter(mMouseX, mMouseY, 10,10); }
     
-    emitPos.x = thePos.x;
-    emitPos.y = thePos.y;
+    
     for (int i=0; i<maxParticles; i++) { 
       if (particles[i].life > 0) { 
         particles[i].update(); 

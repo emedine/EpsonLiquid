@@ -65,20 +65,10 @@ class MSAHandler {
 
 
   ///////// PASS THE POSITIONS OF ALL COLOR BOTTLES ////
-  
-      /*
-      PVector prevPosCy = new PVector(0, 0);
-  PVector curPosCy = new PVector(0, 0);
-  PVector prevPosMg = new PVector(0, 0);
-  PVector curPosMg = new PVector(0, 0);
-  PVector prevPosYl = new PVector(0, 0);
-  PVector curPosYl = new PVector(0, 0);
-  PVector prevPosBk = new PVector(0, 0);
-  PVector curPosBk = new PVector(0, 0);
-  */
-    public void updatePositionCy(PVector thePos) {
+
+  public void updatePositionCy(PVector thePos) {
     ///////// change this to track the UI Sliders
-        int pID = 0;
+    int pID = 0;
     curPosCy.x = thePos.x;
     curPosCy.y = thePos.y;
     float mouseNormX = prevPosCy.x * invWidth;
@@ -89,7 +79,7 @@ class MSAHandler {
     prevPosCy.y = curPosCy.y;
     addForce(pID, mouseNormX, mouseNormY, mouseVelX, mouseVelY, 15, 15); /// smaller is less force
   }
-    public void updatePositionMg(PVector thePos) {
+  public void updatePositionMg(PVector thePos) {
     ///////// change this to track the UI Sliders
     int pID = 1;
     curPosMg.x = thePos.x;
@@ -103,7 +93,7 @@ class MSAHandler {
 
     addForce(pID, mouseNormX, mouseNormY, mouseVelX, mouseVelY, 15, 15); /// smaller is less force
   }
-    public void updatePositionYl(PVector thePos) {
+  public void updatePositionYl(PVector thePos) {
     ///////// change this to track the UI Sliders
     int pID = 2;
     curPosYl.x = thePos.x;
@@ -190,7 +180,7 @@ class MSAHandler {
 
   // add force and dye to fluid, and create particles
   void emitter(float x, float y, float dx, float dy, int count, int emitterSize) {
-        int pID = 4;
+    int pID = 4;
     if (x>deathZone&& x<width-deathZone && y>deathZone&&y<height-deathZone) {
 
       if (Math.abs(dx) <tuioStationaryForce/10 && Math.abs(dx)<tuioStationaryForce/10) {
@@ -220,16 +210,12 @@ class MSAHandler {
 
     float colorMult = 5;
     float velocityMult = 30.0f;
-
     int index = fluidSolver.getIndexForNormalizedPosition(x, y);
-
     int drawColor;
-
     colorMode(HSB, 360, 1, 1);
     float hue = ((x + y) * 180 + frameCount) % 360;
     drawColor = color(hue, 1, 1);
     colorMode(RGB, 1); 
-
     fluidSolver.rOld[index]  += red(drawColor) * colorMult;
     fluidSolver.gOld[index]  += green(drawColor) * colorMult;
     fluidSolver.bOld[index]  += blue(drawColor) * colorMult;
@@ -250,16 +236,11 @@ class MSAHandler {
     case 3:
       particleSystemK.emitter(x * width, y * height, count, emitterSize);
       break;
-      
-     case 4:
-         
-         break;
+
+    case 4:
+
+      break;
     }
-
-
-
-
-
 
     fluidSolver.uOld[index] += dx * velocityMult;
     fluidSolver.vOld[index] += dy * velocityMult;

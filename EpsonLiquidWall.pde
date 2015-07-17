@@ -70,16 +70,16 @@ color theYellow = color(255, 242, 0);
 color theBlack = color(0, 0, 0);
 
 //// EMITTER POSTIONS /////////
-PVector posCyan = new PVector(stageW/5, 0);
-PVector posMag = new PVector(stageW/4, 0);
-PVector posYellow = new PVector(stageW/3, 0);
-PVector posBlack = new PVector(stageW/2, 0);
+PVector posCyan = new PVector(stageW/5, stageH);
+PVector posMag = new PVector(stageW/4,stageH);
+PVector posYellow = new PVector(stageW/3, stageH);
+PVector posBlack = new PVector(stageW/2, stageH);
 
 //// TARGET SET BY THE SLIDER POSITION //////
-PVector targetCyan =  new PVector(stageW/5, 0);
-PVector targetMag = new PVector(stageW/4, 0);
-PVector targetYellow = new PVector(stageW/3, 0);
-PVector targetBlack = new PVector(stageW/2, 0);
+PVector targetCyan =  new PVector(stageW/5, stageH);
+PVector targetMag = new PVector(stageW/4,stageH);
+PVector targetYellow = new PVector(stageW/3,stageH);
+PVector targetBlack = new PVector(stageW/2, stageH);
 
 //// current emitter ID /////////
 int bottleID = 0;
@@ -163,18 +163,28 @@ public void draw() {
 
   updateAllParticles();
 
-  mSa.updatePositionBk(posCyan);
-    mSa.updatePositionBk(posMag);
-      mSa.updatePositionBk(posYellow);
+if(posCyan.y < stageH - 20){
+    mSa.updatePositionCy(posCyan);
+}
+if(posMag.y < stageH - 20){
+  mSa.updatePositionMg(posMag);
+}
+if(posYellow.y < stageH - 20){
+  mSa.updatePositionYl(posYellow);
+}
+if(posBlack.y < stageH - 20){
   mSa.updatePositionBk(posBlack);
+}
+
   /// particleSystemK.updateAndDraw();
   //selectedThumbnail.src=externals.canvas.toDataURL("image/jpeg",0.7);// take a screenshot from the sketch and place it in the imgElement
   //make the mouse unpressed for next draw loop
   mMousePressed=false;
 }
 
+///// UPDATES OUR EMITTER TARGET TO MATCH SLIDER POSITION /////////////////
 void updateEmitterPositions(){
-  targetCyan.y = targetMag.y = targetYellow.y = targetBlack.y;
+  /// targetCyan.y = targetMag.y = targetYellow.y = targetBlack.y;
   if(posCyan.y < targetCyan.y){
     
     posCyan.y = stageH;
@@ -202,16 +212,7 @@ void updateEmitterPositions(){
   } else {
     posBlack.y -= 10;
   }
-  /*
-  fill(0);
-  ellipse(posBlack.x, posBlack.y, 30,30);
-  println("Pos y: " + posBlack.y + " target: " + targetBlack.y);
-  */
-  ///// move the emitter from stageH to target
-  
-  //// once it's there put it back
-  
-  
+
 }
 
 void updateAllParticles() {
@@ -219,19 +220,19 @@ void updateAllParticles() {
   int num = bottleID;
    for (int i = 0; i < StreamCyan.size(); i++) {
       ParticleSystem pc = StreamCyan.get(i);
-      pc.updateAndDraw(new PVector(posCyan.x, posCyan.y));
+      pc.updateAndDraw();
     }
      for (int j = 0; j < StreamMagenta.size(); j++) {
       ParticleSystem pm = StreamMagenta.get(j);
-      pm.updateAndDraw(new PVector(posMag.x, posMag.y));
+      pm.updateAndDraw();
     }
      for (int K = 0; K < StreamYellow.size(); K++) {
       ParticleSystem py = StreamYellow.get(K);
-      py.updateAndDraw(new PVector(posYellow.x, posYellow.y));
+      py.updateAndDraw();
     }
     for (int l = 0; l < StreamBlack.size(); l++) {
       ParticleSystem pb= StreamBlack.get(l);
-      pb.updateAndDraw(new PVector(posBlack.x, posBlack.y));
+      pb.updateAndDraw();
     }
 
 
@@ -239,51 +240,20 @@ void updateAllParticles() {
 
 ///////// INTERACTIVITY ////////////
 void keyPressed() {
-  println(keyCode);
-  if (keyCode == 67) {
-    println("CYAN");
-    bottleID = 0;
-  } 
-  else if (keyCode == 77) {
-    println("MAGENTA");
-    bottleID = 1;
-  } 
-  else if (keyCode == 89) {
-    println("YELLOW");
-    bottleID = 2;
-  } 
-  else if (keyCode == 75) {
-    println("BLACK");
-    bottleID = 3;
-  }
-  println("Bottle ID: " + bottleID);
+
 }
 
-
-public void mouseDragged() {
-
- 
-  /// mSa.updatePositions(bottleID);
-}
 
 /////////// LISTEN FOR OSC EVENTS ///////////////////////
 
-/////// OFFICE IP: 192.168.1.181
-/////// 169.254.179.91
+/////// OFFICE IP (IndieBio 5g): 192.168.1.181
+/////// OFFICE IP(touchOSC network): 169.254.179.91
 /////// HOME IP: 192.168.1.67
 void oscEvent(OscMessage theOscMessage) {
   ////  println("DEFAULT message: " + theOscMessage.addrPattern());
-
-       //*/
   String defaultMess = theOscMessage.addrPattern();
-  
-  println("MESSAGE : " + defaultMess);
-
-  //
+  /// println("MESSAGE : " + defaultMess);
   float theVal = theOscMessage.get(0).floatValue();
-
-  // Float pos1Y = theOscMessage.get(1).floatValue();
-
   ///////// TOUCH OSC INPUTS ///////////////////////////////////
 
   if (defaultMess.equals("/EpsonLiquidMixer/doMix")) {
@@ -296,21 +266,24 @@ void oscEvent(OscMessage theOscMessage) {
   //////////////
   if (defaultMess.equals("/1/fader1")) {   //// cyan
     /// targetCyan.y = map(theVal,0,1,0,stageH);
-     targetBlack.y = map(theVal,0,1,stageH,0);
-         println("target black: " + targetBlack.y);
+     targetCyan.y = map(theVal,0,1,stageH,0);
+     println("target cyan: " + targetCyan.y);
     
   } 
   if (defaultMess.equals("/1/fader2")) { /// magenta
 
      targetMag.y = map(theVal,0,1,stageH,0);
+     println("target magenta: " + targetMag.y);
   }  
     if (defaultMess.equals("/1/fader3")) { /// yellow
 
      targetYellow.y = map(theVal,0,1,stageH, 0);
+      println("target yellow: " + targetYellow.y);
   }
     if (defaultMess.equals("/1/fader4")) { /// black
 
     targetBlack.y = map(theVal,0,1, stageH, 0);
+     println("target black: " + targetBlack.y);
 
   }
   else {
